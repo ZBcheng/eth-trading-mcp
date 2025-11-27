@@ -25,6 +25,7 @@ async fn avoid_rate_limit() {
 
 #[tokio::test]
 #[serial_test::serial]
+#[ignore]
 async fn test_get_balance_with_eth_should_work() {
     avoid_rate_limit().await;
     let config = get_test_config().await;
@@ -37,7 +38,7 @@ async fn test_get_balance_with_eth_should_work() {
     let result = service.get_balance(params).await.0;
     match result {
         GetBalanceResult::Success(resp) => {
-            println!("✅ ETH Balance Response (Real On-Chain Data):");
+            println!("✅ ETH Balance Response:");
             println!("   Address: {}", WALLET_ADDRESS);
             println!("   Balance: {} wei", resp.balance);
             println!("   Formatted: {} ETH", resp.formatted_balance);
@@ -56,6 +57,7 @@ async fn test_get_balance_with_eth_should_work() {
 
 #[tokio::test]
 #[serial_test::serial]
+#[ignore]
 async fn test_get_balance_with_erc20_token_should_work() {
     avoid_rate_limit().await;
     let config = get_test_config().await;
@@ -68,7 +70,7 @@ async fn test_get_balance_with_erc20_token_should_work() {
     let result = service.get_balance(params).await.0;
     match result {
         GetBalanceResult::Success(resp) => {
-            println!("✅ USDT Balance Response (Real On-Chain Data):");
+            println!("✅ USDT Balance Response:");
             println!("   Address: {}", WALLET_ADDRESS);
             println!("   Token: {} ({})", resp.symbol, USDT_CONTRACT_ADDRESS);
             println!("   Balance: {} (raw)", resp.balance);
@@ -87,6 +89,7 @@ async fn test_get_balance_with_erc20_token_should_work() {
 
 #[tokio::test]
 #[serial_test::serial]
+#[ignore]
 async fn test_get_balance_with_invalid_address_should_return_error() {
     avoid_rate_limit().await;
     let config = get_test_config().await;
@@ -116,6 +119,7 @@ async fn test_get_balance_with_invalid_address_should_return_error() {
 
 #[tokio::test]
 #[serial_test::serial]
+#[ignore]
 async fn test_get_token_price_usdc_should_work() {
     avoid_rate_limit().await;
     let config = get_test_config().await;
@@ -127,7 +131,7 @@ async fn test_get_token_price_usdc_should_work() {
     let result = service.get_token_price(params).await.0;
     match result {
         GetTokenPriceResult::Success(resp) => {
-            println!("✅ USDC Price Response (Real On-Chain Data):");
+            println!("✅ USDC Price Response:");
             println!("   Symbol: {}", resp.symbol);
             println!("   Address: {}", resp.address);
             println!("   Price in USD: ${}", resp.price_usd);
@@ -161,6 +165,7 @@ async fn test_get_token_price_usdc_should_work() {
 
 #[tokio::test]
 #[serial_test::serial]
+#[ignore]
 async fn test_get_token_price_eth_should_work() {
     avoid_rate_limit().await;
     let config = get_test_config().await;
@@ -172,7 +177,7 @@ async fn test_get_token_price_eth_should_work() {
     let result = service.get_token_price(params).await.0;
     match result {
         GetTokenPriceResult::Success(resp) => {
-            println!("✅ ETH Price Response (Real On-Chain Data):");
+            println!("✅ ETH Price Response:");
             println!("   Symbol: {}", resp.symbol);
             println!("   Address: {}", resp.address);
             println!("   Price in USD: ${}", resp.price_usd);

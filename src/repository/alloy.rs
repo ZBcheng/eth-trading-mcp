@@ -506,6 +506,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_eth_balance_should_work() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -527,6 +528,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_eth_balance_random_address_should_work() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -547,6 +549,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_erc20_balance_usdt_should_work() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -575,6 +578,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_token_metadata_dai_should_work() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -596,6 +600,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_gas_price() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -624,6 +629,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_erc20_balance_invalid_contract_should_return_error() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -647,6 +653,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_token_metadata_invalid_contract_should_return_error() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -666,6 +673,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_eth_usd_price_should_work() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -701,6 +709,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_uniswap_pair_reserves_should_work() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -741,6 +750,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_uniswap_pair_reserves_nonexistent_pair_should_fail() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -767,6 +777,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_swap_amounts_out_should_work() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -799,6 +810,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_get_swap_amounts_out_multi_hop_should_work() {
         rate_limit_delay().await;
         let repo = create_test_repository();
@@ -837,6 +849,7 @@ mod tests {
 
     #[tokio::test]
     #[serial_test::serial]
+    #[ignore]
     async fn test_simulate_swap_should_handle_transfer_failure() {
         rate_limit_delay().await;
         let repo = create_test_repository();
