@@ -217,31 +217,47 @@ Server will start at `http://0.0.0.0:8000`, MCP SSE endpoint is `/trading/sse`.
 
 ## Testing
 
-Project contains unit tests (integration tests not yet implemented):
+Project contains unit tests and integration tests. Tests that interact with the blockchain are marked with `#[ignore]` by default.
 
 ```bash
-# Run all tests
+# Run non-ignored tests only (unit tests without blockchain interaction)
 cargo test
 
-# Run specific test
-cargo test test_get_balance_with_eth_should_work
+# Run all tests including ignored blockchain interaction tests
+cargo test -- --ignored
 
-# Show test output
-cargo test -- --nocapture
+# Run a specific ignored test
+cargo test test_get_balance_with_eth_should_work -- --ignored --nocapture
+
+# Run all tests (both ignored and non-ignored)
+cargo test -- --include-ignored
 ```
 
-> ⚠️ **Rate Limiting Notice**:
+> ⚠️ **Why are blockchain tests ignored?**
 >
-> - Current tests call real Ethereum RPC nodes and include automatic 1-second delays between tests to mitigate rate limiting
-> - If you still encounter HTTP 429 errors (rate limiting), try running individual tests with retry:
+> - Tests that interact with Ethereum RPC nodes are marked with `#[ignore]` to prevent rate limiting issues during normal test runs
+> - Free RPC providers (like LlamaRPC) have strict rate limits, and running all tests simultaneously may trigger HTTP 429 errors
+> - You need to manually run these tests individually or with delays to avoid hitting rate limits
 >
->   ```bash
->   # Run a specific test that failed due to rate limiting
->   cargo test repository::alloy::tests::test_get_token_metadata_dai_should_work -- --nocapture
->   ```
+> **Running blockchain interaction tests:**
 >
-> - Tests are designed to gracefully handle rate limiting and will skip when rate limited
-> - You can adjust the delay by modifying `TEST_DELAY_MS` constant in `src/repository/alloy.rs`
+> ```bash
+> # Run all ignored tests (includes automatic 1-second delays between tests)
+> cargo test -- --ignored --test-threads=1
+>
+> # Run a specific blockchain test
+> cargo test repository::alloy::tests::test_get_token_metadata_dai_should_work -- --ignored --nocapture
+>
+> # Run all service layer blockchain tests
+> cargo test service::tests -- --ignored --nocapture
+> ```
+>
+> **Tips:**
+>
+> - Use `--test-threads=1` to run tests sequentially and avoid rate limiting
+> - Tests include automatic delays (configurable via `TEST_DELAY_MS` in `src/repository/alloy.rs`)
+> - If you still encounter rate limiting, wait a few minutes before retrying
+> - Consider using a paid RPC provider for extensive testing
 
 ## Examples
 
