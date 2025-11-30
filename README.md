@@ -215,6 +215,177 @@ cargo run --release
 
 Server will start at `http://0.0.0.0:8000`, MCP SSE endpoint is `/trading/sse`.
 
+## API Reference
+
+The service exposes three MCP tools through the `/trading/sse` endpoint.
+
+### 1. get_balance
+
+**Description:** Query ETH and ERC20 token balances
+
+**Request:**
+
+```json
+{
+  "wallet_address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+  "token_contract_address": "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `wallet_address` | string | ✅ | Wallet address to query balance for |
+| `token_contract_address` | string | ❌ | Optional ERC20 token contract address. If not provided, returns ETH balance |
+
+**Response (Success):**
+
+```json
+{
+  "balance": "1000000000",
+  "formatted_balance": "1000.0",
+  "decimals": 6,
+  "symbol": "USDT"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `balance` | string | Raw balance value |
+| `formatted_balance` | string | Balance formatted with proper decimals |
+| `decimals` | u8 (number) | Token decimals |
+| `symbol` | string | Token symbol (ETH or token symbol) |
+
+**Response (Error):**
+
+```json
+{
+  "error": {
+    // ServiceError object (see Error Types section)
+  }
+}
+```
+
+---
+
+### 2. get_token_price
+
+**Description:** Get current token price in USD or ETH
+
+**Request (by symbol):**
+
+```json
+{
+  "symbol": "USDC"
+}
+```
+
+**Request (by contract address):**
+
+```json
+{
+  "contract_address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `symbol` | string | One of | Query by token symbol (e.g., "ETH", "USDT", "BTC") |
+| `contract_address` | string | the two | Query by token contract address |
+
+**Response (Success):**
+
+```json
+{
+  "symbol": "USDC",
+  "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  "price_usd": "0.9998",
+  "price_eth": "0.0003305",
+  "timestamp": 1705315800
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `symbol` | string | Token symbol |
+| `address` | string | Token contract address |
+| `price_usd` | string | Price in USD |
+| `price_eth` | string | Price in ETH |
+| `timestamp` | i64 (number) | Unix timestamp of the price data |
+
+**Response (Error):**
+
+```json
+{
+  "error": {
+    // ServiceError object (see Error Types section)
+  }
+}
+```
+
+---
+
+### 3. swap_tokens
+
+**Description:** Execute a token swap simulation on Uniswap V2 or V3.
+
+**Request:**
+
+```json
+{
+  "from_token": "USDC",
+  "to_token": "WETH",
+  "amount": "1000",
+  "slippage_tolerance": "0.5",
+  "uniswap_version": "v2",
+  "from_address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `from_token` | string | ✅ | Source token symbol or address (e.g., "ETH", "WETH", or "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2") |
+| `to_token` | string | ✅ | Destination token symbol or address (e.g., "USDC", "DAI", or "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48") |
+| `amount` | string | ✅ | Amount to swap in human-readable format (e.g., "1" for 1 ETH, "100.5" for 100.5 USDC). This will be automatically converted to the token's smallest unit based on its decimals |
+| `slippage_tolerance` | string | ✅ | Slippage tolerance in percentage (e.g., "0.5" for 0.5%, "2" for 2%) |
+| `uniswap_version` | string | ❌ | Optional: Uniswap version to use ("v2" or "v3", defaults to "v2") |
+| `from_address` | string | ❌ | Optional: Wallet address for simulation (defaults to a standard address) |
+
+**Response (Success):**
+
+```json
+{
+  "estimated_output": "0.3305",
+  "estimated_output_raw": "330500000000000000",
+  "minimum_output": "0.3288",
+  "estimated_gas": "150000",
+  "estimated_gas_eth": "0.003825",
+  "price_impact": "0.12",
+  "exchange_rate": "0.0003305",
+  "transaction_data": "Swap simulation (V2): 0xA0b8... -> 0xC02a..."
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `estimated_output` | string | Estimated output amount (formatted with decimals) |
+| `estimated_output_raw` | string | Estimated output amount (raw) |
+| `minimum_output` | string | Minimum output amount after slippage (formatted) |
+| `estimated_gas` | string | Estimated gas cost in wei |
+| `estimated_gas_eth` | string | Estimated gas cost in ETH |
+| `price_impact` | string | Price impact percentage |
+| `exchange_rate` | string | Exchange rate (from_token per to_token) |
+| `transaction_data` | string | Transaction data (for reference, not for execution) |
+
+**Response (Error):**
+
+```json
+{
+  "error": {
+    // ServiceError object (see Error Types section)
+  }
+}
+```
+
 ## Testing
 
 Project contains unit tests and integration tests. Tests that interact with the blockchain are marked with `#[ignore]` by default.
